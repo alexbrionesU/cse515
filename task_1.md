@@ -1,6 +1,6 @@
 # Task 1: Video Feature Extraction Using R3D-18 Model
 
-This project implements **Task 1**, which involves visualizing a video and extracting neural network-based feature descriptors from specific layers of the pre-trained **R3D-18** architecture.
+This project implements **Task 1**, which involves visualizing a video (optionally) and extracting neural network-based feature descriptors from specific layers of the pre-trained **R3D-18** architecture.
 
 ## 1. Overview
 
@@ -9,7 +9,7 @@ The script provided extracts feature vectors from three layers of the **R3D-18**
 - **Layer 4**: The output is a 512 × 4 × 7 × 7 tensor, which is reduced to a 512-dimensional vector by averaging each 4 × 7 × 7 subtensor.
 - **AvgPool Layer**: The output is a 512-dimensional vector.
 
-In addition to feature extraction, the script visualizes the input video frame-by-frame.
+You can also choose to visualize the video being processed before extracting features by enabling the `--visualize` option.
 
 ## 2. Requirements
 
@@ -19,11 +19,24 @@ Ensure you have the following dependencies installed:
 - **Torchvision** (for pre-trained video models)
 - **OpenCV** (for video visualization)
 - **NumPy** (for numerical operations)
+- **PyAV** (for video decoding) – this library is required for reading video files efficiently.
+- **FFmpeg** – PyAV requires FFmpeg to handle various video formats.
 
-You can install the required packages using the following command:
+You can install the required Python packages using the following command:
 ```bash
-pip install torch torchvision opencv-python numpy
+pip install torch torchvision opencv-python numpy av
 ```
+
+Additionally, ensure that **FFmpeg** is installed on your system:
+- **Ubuntu**:
+  ```bash
+  sudo apt update
+  sudo apt install ffmpeg
+  ```
+- **MacOS** (using Homebrew):
+  ```bash
+  brew install ffmpeg
+  ```
 
 ## 3. How to Run the Script
 
@@ -31,7 +44,6 @@ pip install torch torchvision opencv-python numpy
 The script accepts the following arguments:
 - `--video`: The path to the video file you wish to process.
 - `--visualize`: Optionally display the video as it is being processed. This flag is optional, and if omitted, no video will be shown.
-
 
 ### 3.2. Running the Script
 Once you have saved the file as `task_1.py`, you can run the script from the terminal by specifying the video file path.
@@ -46,16 +58,13 @@ python task_1.py --video ./target_videos/video1.avi
 python task_1.py --video ./target_videos/video1.avi --visualize
 ```
 
-This will:
-1. Visualize the video frame-by-frame using OpenCV.
-2. Extract feature vectors from `layer3`, `layer4`, and `avgpool` layers of the **R3D-18** model.
-3. Output the 512-dimensional feature vectors for each layer in a human-readable format.
-
 ### 3.3. Expected Output
-After running the script, you will see the video being displayed on the screen. Following that, the script will print out three 512-dimensional feature vectors:
-- Feature vector from **Layer 3**.
-- Feature vector from **Layer 4**.
-- Feature vector from **AvgPool Layer**.
+After running the script, you will see the following:
+1. **If `--visualize` is enabled**: The video will be displayed frame-by-frame using OpenCV.
+2. **Feature Extraction**: The script will print three 512-dimensional feature vectors:
+   - Feature vector from **Layer 3**.
+   - Feature vector from **Layer 4**.
+   - Feature vector from **AvgPool Layer**.
 
 The output will look something like this:
 ```
@@ -92,6 +101,8 @@ Make sure to modify the `--video` argument to point to the correct path of the v
 
 4. **Averaging Subtensors**:
    - For `layer3` and `layer4`, we group channels and average them, along with averaging over the spatial dimensions. This ensures the reduction of high-dimensional tensors into the required 512-dimensional feature vectors.
+
+
 
 ## 6. Troubleshooting
 
